@@ -1,0 +1,114 @@
+# Manual Release Steps (MARS War Tracker)
+
+This guide covers the remaining manual work that cannot be fully automated from this repo.
+
+## 1. Prepare
+
+1. Open a terminal in the project root.
+2. Run `npm test`.
+3. Run `npm run build`.
+4. Confirm output files exist in `dist/`:
+   - `chrome-<version>.zip`
+   - `firefox-<version>.zip`
+   - `opera-<version>.zip`
+
+## 2. Chrome Manual QA (Unpacked)
+
+1. Open `chrome://extensions`.
+2. Enable `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the project root folder.
+5. Open the extension `Details` page.
+6. Click `Extension options`.
+7. Test the API key flow:
+   - `Generate MARS Custom Key`
+   - `Open API Docs`
+   - paste key and `Validate & Save`
+8. Open `https://www.torn.com/`.
+9. Verify panel behavior:
+   - injects correctly
+   - `Alt+M` toggle works
+   - collapse/hide works
+   - drag-to-reposition works
+   - sort/filter tabs work
+   - popup opens and refresh works
+
+## 3. Firefox Manual QA (Temporary Add-on)
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. If you changed code since the last Firefox test run:
+   - run `npm run build`
+   - remove the existing temporary add-on (or click `Reload` if available)
+3. Click `Load Temporary Add-on...`.
+4. Select `dist/firefox/manifest.json`.
+5. Open the extension options and repeat the same QA checks as Chrome.
+6. If API key validation shows a failed check, copy the full message (it now includes the reason, e.g. `faction.basic=fail (HTTP 403)`).
+7. Watch the Browser Console for extension errors while testing.
+
+## 4. Opera Manual QA
+
+1. Open `opera://extensions`.
+2. Enable developer mode.
+3. Load unpacked extension from `dist/opera/` (or project root).
+4. Repeat the same QA checks as Chrome.
+
+## 5. Capture Store Screenshots / Assets
+
+Save assets into `docs/store-assets/`.
+
+Required screenshots (recommended):
+
+1. Panel open on Torn page
+2. Panel collapsed state
+3. Options page
+4. Popup quick-view
+
+Promotional assets (manual design/export):
+
+1. `promo-1280x800.png` (Chrome Web Store)
+2. `promo-440x280.png` (Chrome Web Store)
+
+## 6. Final Docs Review
+
+1. Review `docs/PRIVACY_POLICY.txt` and finalize wording.
+2. Review `docs/STORE_LISTING.txt`.
+3. Update screenshots/asset references if needed.
+4. Update `README.txt` if install/build instructions changed.
+
+## 7. Submit to Stores
+
+### Chrome Web Store
+
+1. Zip/package: use `dist/chrome-<version>.zip`.
+2. Upload in Chrome Web Store Developer Dashboard.
+3. Fill listing text using `docs/STORE_LISTING.txt`.
+4. Upload screenshots/promotional images.
+5. Add privacy policy details.
+6. Submit for review.
+
+### Firefox AMO
+
+1. Upload `dist/firefox-<version>.zip` (or directory package if required).
+2. Fill listing details.
+3. Upload screenshots.
+4. Submit for review.
+
+### Opera Add-ons
+
+1. Upload `dist/opera-<version>.zip`.
+2. Fill listing details.
+3. Upload screenshots.
+4. Submit for review.
+
+## 8. Post-Release Checks
+
+1. Install from each store listing (after approval).
+2. Confirm options page, popup, and overlay still work.
+3. Verify no store-specific permission warnings changed unexpectedly.
+4. Note any runtime issues in `docs/CHANGELOG.txt` for the next patch.
+
+## Quick Reference
+
+- Manual QA checklist: `docs/MANUAL_SMOKE_TEST_CHECKLIST.txt`
+- Store listing template: `docs/STORE_LISTING.txt`
+- Privacy policy draft: `docs/PRIVACY_POLICY.txt`

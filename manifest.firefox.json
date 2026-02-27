@@ -1,0 +1,62 @@
+{
+  "manifest_version": 2,
+  "name": "MARS War Tracker",
+  "version": "0.1.0",
+  "description": "Torn.com faction war target tracker overlay.",
+  "icons": {
+    "16": "src/assets/icons/icon-16.png",
+    "32": "src/assets/icons/icon-32.png",
+    "48": "src/assets/icons/icon-48.png",
+    "128": "src/assets/icons/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "*://*.torn.com/*",
+    "https://api.torn.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "src/shared/compat.js",
+      "src/shared/constants.js",
+      "src/shared/utils.js",
+      "src/background/storage.js",
+      "src/background/logic.js",
+      "src/background/scheduler-logic.js",
+      "src/background/api.js",
+      "src/background/war-detector.js",
+      "src/background/poller.js",
+      "src/background/message-router.js",
+      "src/background/background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "browser_action": {
+    "default_title": "MARS War Tracker",
+    "default_icon": {
+      "16": "src/assets/icons/icon-16.png",
+      "32": "src/assets/icons/icon-32.png"
+    },
+    "default_popup": "src/popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.torn.com/*"],
+      "js": ["src/shared/compat.js", "src/content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": ["src/styles/mars-theme.css", "src/styles/panel.css"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mars-war-tracker@projectmars.local",
+      "data_collection_permissions": {
+        "required": ["authenticationInfo"]
+      }
+    }
+  },
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}

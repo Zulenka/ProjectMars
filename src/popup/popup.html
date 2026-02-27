@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MARS</title>
+  <link rel="stylesheet" href="../styles/mars-theme.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="popup">
+    <header class="popup__header">
+      <div>
+        <div class="popup__title">MARS</div>
+        <div class="popup__subtitle">War Tracker</div>
+      </div>
+      <button id="refreshBtn" type="button">Refresh</button>
+    </header>
+    <section class="popup__card">
+      <div id="warStatus" class="popup__status">Loading…</div>
+      <div id="summary" class="popup__summary"></div>
+      <div id="updatedAt" class="popup__updated"></div>
+    </section>
+    <section class="popup__card">
+      <div class="popup__section-title">Top Okay Targets</div>
+      <div id="targetList" class="popup__list"></div>
+    </section>
+    <footer class="popup__footer">
+      <a href="https://www.torn.com/" target="_blank" rel="noopener noreferrer">Open Torn</a>
+      <button id="openOptions" type="button">Settings</button>
+    </footer>
+  </main>
+  <script src="../shared/compat.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

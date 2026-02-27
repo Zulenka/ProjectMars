@@ -1,0 +1,100 @@
+MARS War Tracker - Torn API Key Privacy Policy & API Key Use Disclosure
+
+Last updated: 2026-02-24
+
+Purpose
+This document explains how MARS War Tracker uses your Torn API key, what data is accessed, how it is stored, and how it is shared.
+
+Important: MARS War Tracker only requires a Torn API key. It does not require your Torn password and will never ask for it.
+
+Torn API Key Use Summary (ToS-style disclosure)
+
+Data Storage:
+- Only locally (browser extension storage on your device)
+
+Data Sharing:
+- Nobody (no third-party server operated by MARS receives your key or your Torn API response data)
+
+Purpose of Use:
+- Public community tool / gameplay utility
+- Faction war target tracking overlay on Torn.com
+- Display live target status, hospital timers, sorting, and quick attack links
+
+Key Storage & Sharing:
+- Stored locally / Not shared
+- The key is stored in extension local storage (lightly obfuscated, not true encryption)
+- The key is not transmitted to any server controlled by the extension author
+- The key is used only to make requests to Torn's API
+
+Key Access Level:
+- Recommended: Limited Access (or Full Access)
+- MARS validates capability checks for the selections it needs (for example, user/faction war-related data)
+
+What Data MARS Uses
+
+MARS may request and locally cache data needed to provide war tracking features, including:
+- your own user basic/profile data (for faction and war detection)
+- faction basic data (own faction and enemy faction roster detection)
+- enemy user profile data (status, hospital timer, travel state, last action, life values)
+- extension settings and panel state (sort mode, position, polling settings)
+
+Where Data Is Stored
+
+- Browser extension local storage only (for example, `chrome.storage.local` / equivalent WebExtension storage)
+- No external database or cloud storage is used by MARS
+
+What MARS Does NOT Collect
+
+- Torn password
+- Email/password credentials
+- Payment information
+- Analytics/telemetry to third-party services (none implemented)
+
+Where Data Is Sent
+
+- Torn API endpoints (`https://api.torn.com/`) for game data requests
+- Torn website (`https://www.torn.com/`) when you click attack links or open Torn pages
+
+No key or API data is intentionally sent to non-Torn third-party services by this extension.
+
+Key Security and User Responsibility
+
+- Your Torn API key should be treated as sensitive.
+- Use a separate Torn API key for this extension if possible.
+- If you suspect misuse, revoke or rotate your key from Torn preferences immediately.
+- Torn provides API key usage logs (the `key -> log` selection) to help monitor key usage.
+
+Data Retention
+
+- Local cached war and target data remains in extension storage until:
+  - it is overwritten by newer API responses, or
+  - you use the extension's clear/reset options, or
+  - you uninstall the extension / clear extension storage
+
+User Controls
+
+MARS provides controls to:
+- clear cached war data
+- clear all extension data (including the stored API key and settings)
+- export/import settings JSON
+
+Minimum Necessary Use
+
+MARS is designed to request only the data needed for its current features and to poll within Torn API request limits where possible.
+
+Policy Changes
+
+This policy may be updated when MARS features change (for example, if new Torn API selections are added).
+If the extension starts storing or sharing data beyond local-only use, this policy must be updated before release.
+
+Contact / Support
+
+If you need to report a privacy or API-key handling issue for MARS War Tracker, use the project support channel/repository where the extension was provided.
+
+References (Torn API Docs)
+- Torn API documentation / acceptable usage / ToS guidance:
+  https://www.torn.com/api.html#
+- Torn API static docs mirror (content reference used for this policy wording check):
+  https://staticfiles.torn.com/api.html
+- Torn API key management page:
+  https://www.torn.com/preferences.php#tab=api

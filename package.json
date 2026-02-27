@@ -1,0 +1,14 @@
+{
+  "name": "mars-war-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Torn MARS War Tracker browser extension",
+  "scripts": {
+    "build": "node build.js",
+    "build:clean": "node build.js --clean",
+    "test": "node --test tests/*.test.js",
+    "version:bump:patch": "node build.js --bump patch",
+    "version:bump:minor": "node build.js --bump minor",
+    "version:bump:major": "node build.js --bump major"
+  }
+}

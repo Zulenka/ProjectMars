@@ -1,0 +1,15 @@
+# Privacy Policy (Draft)
+
+MARS War Tracker stores a Torn API key and extension settings in browser extension local storage.
+
+## Data Stored
+
+- Torn API key (lightly obfuscated in extension storage)
+- UI settings (panel position, sort mode, polling interval)
+- Cached war and target status data fetched from the Torn API
+
+## Data Transmission
+
+- Requests are sent only to `https://api.torn.com/`
+- Attack links open `https://www.torn.com/`
+- No extension telemetry or third-party API forwarding is implemented

@@ -1,0 +1,37 @@
+# Store Listing Draft (MARS War Tracker)
+
+## Short Description
+
+Mars-themed Torn faction war target tracker overlay with live status, hospital timers, sorting, and quick attack links.
+
+## Long Description
+
+MARS (Monitor, Assess, Recon, Strike) overlays a tactical target panel on Torn.com during faction wars.
+
+### Features
+
+- Live target roster with status badges
+- Hospital countdown timers
+- Sort/filter views (All, Okay, Hospital, Traveling, Abroad)
+- Quick attack links
+- Collapsible panel with keyboard toggle (`Alt+M`)
+- Popup quick-view summary
+- Configurable polling and display preferences
+
+### API Key Requirement
+
+Torn API key required. `Limited` or `Full` access is recommended.
+
+### Privacy Summary
+
+- Data is stored locally in extension storage
+- Requests are sent only to Torn API / Torn.com
+- No third-party telemetry is implemented
+
+## Submission Checklist (Manual)
+
+- [ ] Capture screenshots (panel open/collapsed/options/popup)
+- [ ] Export store-ready icons and promotional graphics
+- [ ] Finalize privacy policy wording
+- [ ] Test package in target browser version
+- [ ] Submit zip package to browser store

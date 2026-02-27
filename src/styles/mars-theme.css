@@ -1,0 +1,20 @@
+:host, .mars-shell, body {
+  --mars-bg: #1a1014;
+  --mars-bg-header: #2a1520;
+  --mars-row: #1e1218;
+  --mars-row-alt: #221419;
+  --mars-row-hover: #2d1a22;
+  --mars-accent: #8b2500;
+  --mars-accent-2: #c4944a;
+  --mars-border: #3a2028;
+  --mars-text: #d4c4b0;
+  --mars-text-dim: #8a7a6a;
+  --mars-text-highlight: #e8c170;
+  --mars-ok: #4a7a4a;
+  --mars-hosp: #8b4513;
+  --mars-travel: #4a5a7a;
+  --mars-abroad: #7a5a8a;
+  --mars-restricted: #5a5a5a;
+  color: var(--mars-text);
+  font-family: Georgia, "Palatino Linotype", serif;
+}

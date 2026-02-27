@@ -1,0 +1,90 @@
+# Manual Smoke Test Checklist
+
+Use this checklist before packaging/submitting updates.
+
+## 1. Install / Load
+
+- [ ] Chrome: load unpacked from project root
+- [ ] Firefox: load `dist/firefox/` temporary add-on
+- [ ] After any code change, rebuild (`npm run build`) and reload/re-add the Firefox temporary add-on before retesting
+- [ ] Opera: load unpacked from `dist/opera/` or project root
+- [ ] Extension icon appears in toolbar
+- [ ] Popup opens without console errors
+- [ ] Options page opens without console errors
+
+## 2. API Key Flow
+
+- [ ] "Generate MARS Custom Key" opens Torn API preferences page
+- [ ] API docs button opens Torn API docs
+- [ ] Valid key validates and saves
+- [ ] Access tier label displays (`Public` / `Minimal` / `Limited` / `Full`)
+- [ ] Invalid key shows error state
+- [ ] Failed validation checks show the underlying error message (not just `ok/fail`)
+
+## 3. Torn Overlay Panel
+
+- [ ] Panel injects on `https://www.torn.com/`
+- [ ] `Alt+M` toggles panel
+- [ ] Collapse button works
+- [ ] Hide button works
+- [ ] Reopen from `Alt+M` after hide works
+- [ ] Dragging panel repositions and persists after refresh
+
+## 4. Data / Polling
+
+- [ ] No-key state renders correctly
+- [ ] No-war state renders correctly
+- [ ] Active-war state shows enemy faction and target counts
+- [ ] Manual refresh button triggers update
+- [ ] Poll countdown decrements in header
+- [ ] Hospital timers tick down live
+- [ ] Rate-limited state does not crash panel
+
+## 5. Sorting / Filtering
+
+- [ ] `All` sort renders
+- [ ] `Okay` filter renders
+- [ ] `Hospital` filter renders
+- [ ] `Traveling` filter renders
+- [ ] `Abroad` filter renders
+- [ ] Filter fallback to `All` occurs when no results
+
+## 6. Popup
+
+- [ ] Popup shows war summary
+- [ ] Popup refresh button works
+- [ ] Popup "Settings" button opens options
+- [ ] Popup attack links point to Torn attack loader URL
+
+## 7. Settings
+
+- [ ] Poll interval save applies
+- [ ] Max visible targets save applies
+- [ ] Panel side preference applies
+- [ ] Export settings JSON downloads file
+- [ ] Import settings JSON applies values
+- [ ] Clear war cache works
+- [ ] Clear all extension data resets key/settings/cache
+
+## 8. Packaging Sanity
+
+- [ ] `npm test` passes
+- [ ] `npm run build` passes
+- [ ] `dist/chrome-<version>.zip` exists
+- [ ] `dist/firefox-<version>.zip` exists
+- [ ] `dist/opera-<version>.zip` exists
+
+## 9. Security / Adversarial Checks
+
+- [ ] Import malformed settings JSON (`{}`, wrong types, unexpected keys, very large numbers) and confirm settings are clamped/sanitized
+- [ ] Validate options status/error messages do not display the raw API key
+- [ ] Tamper extension storage (`settings`, `warData`, `sessionState`) with invalid values and confirm extension recovers after reload
+- [ ] Confirm popup and overlay still render safely when target names contain special characters (`<`, `>`, quotes, long strings)
+- [ ] Confirm popup/overlay attack links still point to Torn attack loader URLs with numeric `user2ID`
+- [ ] Trigger Torn API failure (bad key / temporary API error) and review console logs for secret leakage
+
+## Notes
+
+- Firefox build uses a compatibility shim for promise-style `chrome.*` usage and an MV2 background-script manifest.
+- Firefox temporary add-ons can easily run stale code if not reloaded after rebuilding.
+- Real Torn API field shapes can vary. Validate with live accounts and adjust parsers if needed.

@@ -1,0 +1,17 @@
+Summary
+Torn.com faction war tracker overlay with live enemy status, hospital timers, sorting, and quick attack links.
+
+Description
+MARS War Tracker adds a tactical overlay panel to Torn.com for faction wars.
+
+It helps you monitor enemy targets without leaving the page by showing:
+- current status (Okay, Hospital, Traveling, Abroad, etc.)
+- live hospital countdown timers
+- sortable/filterable target lists
+- quick attack links
+- popup quick-view summary
+- configurable panel and polling settings
+
+The add-on uses your Torn API key to read war-related target information and stores settings/data locally in extension storage. It does not send data to third-party servers.
+
+Recommended Torn API access level: Limited (or Full).

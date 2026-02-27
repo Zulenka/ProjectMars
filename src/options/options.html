@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MARS Settings</title>
+  <link rel="stylesheet" href="../styles/mars-theme.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="options-shell">
+    <header class="options-header">
+      <h1>MARS War Tracker</h1>
+      <p>Configure API access and panel behavior.</p>
+    </header>
+
+    <section class="card">
+      <h2>API Key</h2>
+      <label for="apiKey">Torn API Key</label>
+      <div class="row">
+        <input id="apiKey" type="password" placeholder="Paste your Torn API key">
+        <button id="validateBtn" type="button">Validate & Save</button>
+      </div>
+      <div class="row">
+        <button id="openCustomKeyBtn" type="button">Generate MARS Custom Key</button>
+        <button id="copyCustomKeyLinkBtn" type="button">Copy Builder Link</button>
+        <button id="openApiDocsBtn" type="button">Open API Docs</button>
+      </div>
+      <p class="help">
+        Torn access tiers are color-coded in the API docs and key builder: <strong>Public</strong>, <strong>Minimal</strong>, <strong>Limited</strong>, and <strong>Full</strong>.
+        <a href="https://www.torn.com/preferences.php#tab=api" target="_blank" rel="noopener noreferrer">Open Torn API key settings</a>
+      </p>
+      <p class="help">
+        MARS requires a Torn API key using one of those access tiers. <strong>Limited</strong> is recommended for faction war tracking.
+      </p>
+      <div id="apiStatus" class="status">No key saved.</div>
+    </section>
+
+    <section class="card">
+      <h2>Tracker Settings</h2>
+      <div class="field-grid">
+        <label>Poll interval (seconds)
+          <input id="pollIntervalSeconds" type="range" min="30" max="120" step="30">
+          <span id="pollIntervalValue">30s</span>
+        </label>
+        <label>Max visible targets
+          <input id="maxVisibleTargets" type="number" min="5" max="30" step="1">
+        </label>
+        <label>Panel side
+          <select id="panelPosition">
+            <option value="right">Right</option>
+            <option value="left">Left</option>
+          </select>
+        </label>
+        <label>Default sort
+          <select id="defaultSort">
+            <option value="all">All</option>
+            <option value="okay">Okay</option>
+            <option value="hospital">Hospital</option>
+            <option value="traveling">Traveling</option>
+            <option value="abroad">Abroad</option>
+          </select>
+        </label>
+        <label class="checkbox"><input id="showLastAction" type="checkbox"> Show last action</label>
+        <label class="checkbox"><input id="showLifeBar" type="checkbox"> Show life bar</label>
+        <label class="checkbox"><input id="flashOnOkay" type="checkbox"> Flash when target becomes Okay</label>
+        <label class="checkbox"><input id="soundAlerts" type="checkbox"> Sound alerts (placeholder)</label>
+      </div>
+      <div class="row">
+        <button id="saveSettingsBtn" type="button">Save Settings</button>
+        <button id="resetPositionBtn" type="button">Reset Panel Position</button>
+        <button id="clearDataBtn" type="button" class="danger">Clear War Cache</button>
+      </div>
+      <div class="row">
+        <button id="exportSettingsBtn" type="button">Export Settings JSON</button>
+        <label class="file-pick" for="importSettingsFile">Import Settings JSON</label>
+        <input id="importSettingsFile" type="file" accept="application/json,.json">
+        <button id="clearAllDataBtn" type="button" class="danger">Clear All Extension Data</button>
+      </div>
+      <p class="help">
+        Lower poll intervals increase API usage. Torn API keys are generally limited to 100 requests/minute.
+      </p>
+      <div id="settingsStatus" class="status"></div>
+    </section>
+  </main>
+  <script src="../shared/compat.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

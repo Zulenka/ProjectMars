@@ -1,0 +1,132 @@
+.mars-shell {
+  position: fixed;
+  z-index: 2147483640;
+  width: 320px;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+}
+.mars-shell * { box-sizing: border-box; }
+.mars-shell.is-left { left: 16px; right: auto; }
+.mars-shell.is-hidden { display: none; }
+.mars-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 80vh;
+  border: 1px solid var(--mars-border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1a1014 0%, #160d11 100%);
+  box-shadow: 0 14px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+.mars-shell.is-collapsed .mars-panel { display: none; }
+.mars-shell.is-collapsed .mars-fab { display: flex; }
+.mars-fab {
+  display: none;
+  margin-left: auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--mars-border);
+  background: rgba(26,16,20,.95);
+  color: var(--mars-text);
+  cursor: pointer;
+}
+.mars-fab__icon { color: var(--mars-accent-2); }
+.mars-fab__count { font-weight: 700; color: #93c28f; }
+.mars-panel__header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(180deg,#2a1520 0%,#23131b 100%);
+  border-bottom: 1px solid var(--mars-border);
+  cursor: grab;
+}
+.mars-panel__title { font-weight: 700; letter-spacing: .08em; color: var(--mars-text-highlight); }
+.mars-panel__subtitle { font-size: 11px; color: var(--mars-text-dim); }
+.mars-panel__meta { min-width: 0; text-align: right; font-size: 11px; color: var(--mars-text-dim); }
+.mars-enemy-label { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mars-panel__controls { display: flex; gap: 4px; }
+.mars-btn {
+  width: 24px; height: 24px; padding: 0;
+  border: 1px solid var(--mars-border);
+  background: rgba(139,37,0,.16);
+  color: var(--mars-text);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.mars-btn:hover { background: rgba(139,37,0,.32); }
+.mars-panel__filters {
+  display: flex; gap: 6px; padding: 8px 10px;
+  border-bottom: 1px solid var(--mars-border); overflow-x: auto;
+}
+.mars-pill {
+  border: 1px solid var(--mars-border);
+  background: rgba(255,255,255,.02);
+  color: var(--mars-text-dim);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mars-pill.is-active {
+  border-color: rgba(196,148,74,.6);
+  color: var(--mars-text-highlight);
+  background: rgba(196,148,74,.12);
+}
+.mars-panel__body {
+  min-height: 180px;
+  max-height: 54vh;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #5c3a3a #1a1014;
+}
+.mars-panel__body::-webkit-scrollbar { width: 10px; }
+.mars-panel__body::-webkit-scrollbar-track { background: #1a1014; }
+.mars-panel__body::-webkit-scrollbar-thumb { background: #5c3a3a; border-radius: 999px; }
+.mars-empty { padding: 18px 12px; color: var(--mars-text-dim); font-size: 12px; }
+.mars-target-list { display: flex; flex-direction: column; }
+.mars-target {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(58,32,40,.65);
+  background: var(--mars-row);
+  transition: background-color .12s ease;
+}
+.mars-target:nth-child(even) { background: var(--mars-row-alt); }
+.mars-target:hover { background: var(--mars-row-hover); }
+.mars-target.is-hospital-soon { box-shadow: inset 0 0 0 1px rgba(196,148,74,.35); }
+.mars-target__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.mars-target__left,.mars-target__right { display: flex; align-items: center; gap: 6px; }
+.mars-target__left { min-width: 0; }
+.mars-target__dot { width: 8px; height: 8px; border-radius: 50%; background: #666; flex: 0 0 auto; }
+.mars-target__name {
+  font-size: 12px; color: var(--mars-text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mars-target__status { font-size: 11px; color: var(--mars-text-dim); }
+.mars-attack {
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; border: 1px solid rgba(139,37,0,.5);
+  color: var(--mars-text-highlight); text-decoration: none;
+  background: rgba(139,37,0,.18);
+}
+.mars-attack:hover { background: rgba(139,37,0,.35); box-shadow: 0 0 0 2px rgba(139,37,0,.15); }
+.mars-target__sub { font-size: 11px; color: var(--mars-text-dim); }
+.mars-life { height: 4px; }
+.mars-life__bar { width: 100%; height: 4px; background: rgba(255,255,255,.04); border-radius: 999px; overflow: hidden; }
+.mars-life__fill { height: 100%; width: 0%; background: linear-gradient(90deg,#8b2500,#c4944a); }
+.status-okay .mars-target__dot { background: var(--mars-ok); }
+.status-hospital .mars-target__dot { background: var(--mars-hosp); }
+.status-traveling .mars-target__dot { background: var(--mars-travel); }
+.status-abroad .mars-target__dot { background: var(--mars-abroad); }
+.status-restricted .mars-target__dot { background: var(--mars-restricted); }
+.mars-panel__footer { padding: 8px 10px; border-top: 1px solid var(--mars-border); font-size: 11px; color: var(--mars-text-dim); }
+@media (max-width: 768px) {
+  .mars-shell { width: min(320px, calc(100vw - 20px)); right: 10px; }
+}

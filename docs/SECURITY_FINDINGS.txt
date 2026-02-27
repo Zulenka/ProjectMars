@@ -1,0 +1,119 @@
+MARS War Tracker - Security Findings (Pass 2)
+
+Date: 2026-02-24
+Reviewer: Codex (GPT-5)
+
+Summary
+- No critical code-injection paths found in current source review.
+- Rendering uses DOM APIs with `textContent` and fixed URL bases, which significantly reduces XSS/injection risk.
+- Multiple medium/low hardening improvements were applied during Pass 1 and Pass 2.
+- Remaining risk is primarily operational/manual (browser runtime behavior, malformed live API payloads, and manual QA coverage).
+
+Findings (Ordered by Severity)
+
+1. Medium (Fixed) - Background message payloads accepted loosely
+Risk:
+- Malformed or oversized payloads sent to `chrome.runtime.onMessage` could lead to unexpected state writes or noisy failures.
+Fix Applied:
+- Added payload validation for:
+  - `VALIDATE_API_KEY` (type + length bound)
+  - `SETTINGS_UPDATED` (plain object + allowed keys only)
+  - `PANEL_VISIBILITY_SET` (boolean)
+Files:
+- `src/background/background.js`
+- `src/background/message-router.js`
+
+2. Medium (Fixed) - Background storage reads trusted malformed object shapes
+Risk:
+- Corrupted/tampered extension storage values (strings/arrays instead of objects) could cause runtime exceptions or polluted state responses.
+Fix Applied:
+- Added storage normalizers for `warData` and `sessionState`
+- Normalized settings/war/session reads in background state and startup paths
+- `initDefaults()` now repairs malformed stored objects, not just missing keys
+Files:
+- `src/background/storage.js`
+- `src/background/background.js`
+
+3. Medium (Fixed) - Settings storage merge allowed arbitrary keys (storage pollution)
+Risk:
+- Malformed imported settings or crafted messages could persist unexpected keys in extension settings storage.
+Fix Applied:
+- `mergeSettings(...)` now whitelists known keys from defaults only.
+Files:
+- `src/background/storage.js`
+
+4. Medium (Fixed) - Torn API client accepted unsanitized endpoint paths and could leak keys in thrown errors
+Risk:
+- Invalid path strings could produce unsafe/unexpected API URLs.
+- Fetch/runtime errors that include request URLs could expose the API key in error messages.
+Fix Applied:
+- Added endpoint path validation (`normalizeApiPath`)
+- Added secret redaction for raw and URL-encoded keys in thrown errors
+Files:
+- `src/background/api.js`
+- `tests/background-api.test.js`
+
+5. Low/Medium (Fixed) - Open Shadow DOM exposed extension UI internals to page scripts
+Risk:
+- Torn page scripts could inspect/mutate the overlay internals more easily via `host.shadowRoot`.
+Fix Applied:
+- Changed Shadow DOM mode from `open` to `closed`.
+Files:
+- `src/content/content.js`
+
+6. Low - API key stored with obfuscation only (not encryption)
+Risk:
+- Local extension storage compromise on the user machine could expose the key.
+Notes:
+- This is a standard browser-extension limitation unless using external secret storage.
+- Current implementation does not claim strong encryption.
+Mitigation:
+- Keep disclosure in privacy policy; recommend key rotation/revocation guidance (already documented).
+Files:
+- `src/shared/utils.js`
+- `docs/TORN_API_KEY_PRIVACY_POLICY.txt`
+
+7. Low - Broad catch blocks may hide debugging detail
+Risk:
+- Silent catches can obscure failures and slow security debugging.
+Notes:
+- Most are used intentionally for extension lifecycle/transient runtime behavior.
+Follow-up:
+- Consider adding guarded debug logging (without sensitive data) behind a dev flag.
+Files (examples):
+- `src/content/content.js`
+- `src/background/background.js`
+- `src/shared/compat.js`
+
+8. Informational - No unsafe HTML rendering patterns found in UI paths reviewed
+Evidence:
+- No `innerHTML`/`insertAdjacentHTML` usage in source rendering paths.
+- Target names/status/subtext rendered with `textContent`.
+- Attack URLs use numeric coercion (`parseInt`) before href assignment.
+- Static regression tests added to detect unsafe APIs and unsafe link attribute regressions.
+Files (examples):
+- `src/content/content.js`
+- `src/popup/popup.js`
+- `tests/security-static-audit.test.js`
+
+9. Informational - Host permissions and CSP appear reasonably minimal for current feature set
+Current scope:
+- `storage`, `alarms`
+- host permissions limited to Torn domains/API
+- restrictive extension page CSP
+Files:
+- `manifest.json`
+- `manifest.opera.json`
+- `manifest.firefox.json`
+
+Residual Risks / Gaps
+- Manual adversarial tests (malformed API payloads in live browser execution) not yet performed
+- Firefox/Opera runtime behavior still needs manual console review
+- No automated DOM harness tests for hostile strings in content/popup rendering
+- No explicit rate-limit abuse/load tests beyond unit-level scheduler logic
+
+Recommended Next Security Tasks
+1. Add a hostile-string rendering test harness for content/popup rows (jsdom or extracted pure renderer helpers)
+2. Run manual malformed storage/import tests in Chrome + Firefox + Opera and document outcomes
+3. Review API failure console output in each browser to confirm key redaction behavior end-to-end
+4. Add a lightweight CI step for the static security audit test file

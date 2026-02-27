@@ -1,0 +1,10 @@
+# Changelog
+
+## 0.1.0
+
+- Initial MARS MVP
+- Options page and API key validation
+- Background war detection/polling
+- Torn overlay panel
+- Popup quick view
+- Build/package scaffolding for Chrome/Firefox/Opera

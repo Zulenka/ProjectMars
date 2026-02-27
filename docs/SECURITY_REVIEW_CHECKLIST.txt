@@ -1,0 +1,50 @@
+MARS War Tracker - Security Review Checklist (Pass 2)
+
+Date: 2026-02-24
+Status: In Progress (Pass 2 code hardening completed, manual browser verification still required)
+
+Scope Covered
+[x] Manifest permissions / CSP review
+[x] Background API/storage/parser/scheduler/orchestration code review
+[x] Content script DOM rendering and link generation review
+[x] Options/popup input and import JSON review
+[x] Message handler payload validation review
+[x] Static search for dangerous DOM/code execution APIs
+[x] Static regression tests for dangerous APIs and safe link attributes
+[x] Storage corruption recovery review and hardening
+[x] API client path validation and secret redaction review/hardening
+[x] Build/test regression pass after hardening changes
+[ ] Manual adversarial browser testing (Chrome)
+[ ] Manual adversarial browser testing (Firefox)
+[ ] Manual adversarial browser testing (Opera)
+[ ] Browser console error review during malformed-input tests
+
+Static Audit Checks
+[x] No `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write` used for rendering
+[x] No `eval` / `Function` / string-based timers found
+[x] Attack links coerce target IDs to numeric values
+[x] External URLs in options/popup are fixed constants
+[x] API key not intentionally logged to console
+[x] Network fetches are routed through Torn API client module
+
+Hardening Applied During This Pass
+[x] Content script Shadow DOM changed to `closed` mode (reduced page-level tampering surface)
+[x] Background message handler now validates payload shapes/types
+[x] Background settings updates now sanitize/whitelist keys
+[x] Storage settings merge now persists only known setting keys
+[x] Background storage reads normalize malformed `settings` / `warData` / `sessionState`
+[x] `initDefaults()` repairs malformed stored objects (not only missing keys)
+[x] Torn API client validates endpoint path format before URL construction
+[x] Torn API client redacts API keys from thrown error messages (raw + encoded forms)
+[x] Background message router extracted to a testable module with malformed-payload unit tests
+
+Manual Tests To Run Next
+[ ] Import malformed settings JSON (unexpected keys, huge values, wrong types)
+[ ] Tamper extension storage values and reload extension
+[ ] Validate hostile strings in target names/status from live/mocked data
+[ ] Verify Firefox temporary add-on rebuild/reload process after code changes
+[ ] Review background/content console logs during API failures (confirm no key leakage)
+
+Artifacts
+- Findings: `docs/SECURITY_FINDINGS.txt`
+- Manual QA checklist: `docs/MANUAL_SMOKE_TEST_CHECKLIST.txt`

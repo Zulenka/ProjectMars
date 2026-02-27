@@ -1,0 +1,24 @@
+Opera Build Metadata
+Generated: 2026-02-24 05:01:21 -05:00
+
+Extension Name: MARS War Tracker
+Version: 0.1.0
+Manifest Version: 3
+Description: Torn.com faction war target tracker overlay.
+
+Package File: opera-0.1.0.zip
+Package Path: C:\Users\jness\Documents\Torn\ProjectMars\dist\opera-0.1.0.zip
+Package Size (bytes): 40815
+Package LastWriteTime: 02/24/2026 04:50:44
+SHA256: 80E4356B85BCCBEC63273206EAC9CFD18ADCA367C04C22EA077D4470664C16E7
+SHA1: 9157326BA6567F7025F2CDA2E293B2CBF6B20079
+
+Permissions: storage, alarms
+Host Permissions: *://*.torn.com/*, https://api.torn.com/*
+Background Service Worker: src/background/background.js
+Options Page: src/options/options.html
+Popup: src/popup/popup.html
+
+Content Script Matches:
+  - *://*.torn.com/*
+    JS: src/shared/compat.js, src/content/content.js
