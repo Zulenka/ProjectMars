@@ -17,10 +17,14 @@
     defaultSort: "all",
     showLastAction: true,
     showLifeBar: true,
+    panelWidth: 320,
     panelOffsetTop: null,
     panelOffsetLeft: null
   };
   const ATTACK_URL = "https://www.torn.com/loader.php?sid=attack&user2ID=";
+  const PANEL_WIDTH_MIN = 280;
+  const PANEL_WIDTH_MAX = 560;
+  const VIEWPORT_MARGIN = 10;
 
   const state = {
     settings: { ...DEFAULTS },
@@ -29,7 +33,8 @@
     sortMode: "all",
     collapsed: false,
     rows: new Map(),
-    drag: null
+    drag: null,
+    resize: null
   };
 
   const host = document.createElement("div");
@@ -54,6 +59,9 @@
       e.preventDefault();
       toggleCollapsed();
     }
+  });
+  window.addEventListener("resize", () => {
+    if (!state.drag && !state.resize) applyLayout();
   });
   setInterval(tick, 1000);
   loadState();
@@ -118,9 +126,14 @@
     const footer = e("div", "mars-panel__footer");
     const counts = e("div", "mars-counts", "Targets: 0 | Okay: 0 | Hosp: 0");
     footer.appendChild(counts);
+    const resizeHandle = e("button", "mars-panel__resize-handle");
+    resizeHandle.type = "button";
+    resizeHandle.title = "Resize panel";
+    resizeHandle.setAttribute("aria-label", "Resize panel");
 
-    panel.append(header, filters, body, footer);
+    panel.append(header, filters, body, footer, resizeHandle);
     wrapper.append(panel, fab);
+    makeResizable(resizeHandle, wrapper);
     return { wrapper, panel, fab, enemy, refresh, filters, filterButtons, empty, list, counts };
   }
 
@@ -135,8 +148,17 @@
     });
     function onMove(ev) {
       if (!state.drag) return;
-      const left = clamp(state.drag.left + (ev.clientX - state.drag.x), 0, Math.max(0, window.innerWidth - 320));
-      const top = clamp(state.drag.top + (ev.clientY - state.drag.y), 0, Math.max(0, window.innerHeight - 80));
+      const rect = wrapper.getBoundingClientRect();
+      const left = clamp(
+        state.drag.left + (ev.clientX - state.drag.x),
+        0,
+        Math.max(0, window.innerWidth - rect.width)
+      );
+      const top = clamp(
+        state.drag.top + (ev.clientY - state.drag.y),
+        0,
+        Math.max(0, window.innerHeight - rect.height)
+      );
       ui.wrapper.style.left = `${left}px`;
       ui.wrapper.style.right = "auto";
       ui.wrapper.style.top = `${top}px`;
@@ -151,11 +173,50 @@
     }
   }
 
+  function makeResizable(handle, wrapper) {
+    handle.addEventListener("mousedown", (ev) => {
+      if (ev.button !== 0) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      const rect = wrapper.getBoundingClientRect();
+      const anchorRight = ui.wrapper.style.right !== "auto";
+      const anchorOffset = anchorRight
+        ? parsePx(ui.wrapper.style.right, 16)
+        : parsePx(ui.wrapper.style.left, rect.left);
+      state.resize = {
+        x: ev.clientX,
+        width: sanitizePanelWidth(rect.width),
+        anchorOffset
+      };
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp, { once: true });
+    });
+    function onMove(ev) {
+      if (!state.resize) return;
+      const desired = state.resize.width + (ev.clientX - state.resize.x);
+      const maxByAnchor = window.innerWidth - VIEWPORT_MARGIN - state.resize.anchorOffset;
+      const maxWidth = Math.min(PANEL_WIDTH_MAX, viewportWidthLimit(), Math.max(PANEL_WIDTH_MIN, Math.floor(maxByAnchor)));
+      const nextWidth = clamp(Math.round(desired), PANEL_WIDTH_MIN, maxWidth);
+      state.settings.panelWidth = sanitizePanelWidth(nextWidth);
+      applyPanelWidth(nextWidth);
+      clampWrapperIntoViewport();
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      if (!state.resize) return;
+      const width = sanitizePanelWidth(Math.round(ui.wrapper.getBoundingClientRect().width));
+      state.settings.panelWidth = width;
+      state.resize = null;
+      persistSettings({ panelWidth: width });
+    }
+  }
+
   async function loadState() {
     try {
       const resp = await chrome.runtime.sendMessage({ type: MSG.GET_STATE });
       if (!resp?.ok) return;
       state.settings = { ...DEFAULTS, ...(resp.settings || {}) };
+      state.settings.panelWidth = sanitizePanelWidth(state.settings.panelWidth);
       state.warData = resp.warData || null;
       state.session = resp.session || { panelHidden: false };
       state.sortMode = state.settings.defaultSort || "all";
@@ -199,6 +260,7 @@
     ui.wrapper.classList.toggle("is-collapsed", state.collapsed);
     ui.wrapper.classList.toggle("is-hidden", !!state.session.panelHidden);
     ui.wrapper.classList.toggle("is-left", state.settings.panelPosition === "left");
+    applyPanelWidth(panelWidthForLayout(state.settings.panelWidth));
     if (Number.isFinite(state.settings.panelOffsetTop)) {
       ui.wrapper.style.top = `${state.settings.panelOffsetTop}px`;
       ui.wrapper.style.transform = "none";
@@ -216,6 +278,7 @@
       ui.wrapper.style.right = "16px";
       ui.wrapper.style.left = "auto";
     }
+    clampWrapperIntoViewport();
   }
 
   function render() {
@@ -411,6 +474,35 @@
     }
   }
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+  function viewportWidthLimit() { return Math.max(PANEL_WIDTH_MIN, window.innerWidth - (VIEWPORT_MARGIN * 2)); }
+  function sanitizePanelWidth(value) {
+    const n = Number.parseInt(value, 10);
+    if (!Number.isFinite(n)) return 320;
+    return clamp(n, PANEL_WIDTH_MIN, PANEL_WIDTH_MAX);
+  }
+  function panelWidthForLayout(value) {
+    return clamp(sanitizePanelWidth(value), PANEL_WIDTH_MIN, Math.min(PANEL_WIDTH_MAX, viewportWidthLimit()));
+  }
+  function applyPanelWidth(width) {
+    ui.wrapper.style.setProperty("--mars-panel-width", `${Math.round(width)}px`);
+  }
+  function parsePx(value, fallback) {
+    const n = Number.parseFloat(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function clampWrapperIntoViewport() {
+    const rect = ui.wrapper.getBoundingClientRect();
+    const maxLeft = Math.max(0, window.innerWidth - rect.width);
+    const maxTop = Math.max(0, window.innerHeight - rect.height);
+    const clampedLeft = clamp(Math.round(rect.left), 0, Math.round(maxLeft));
+    const clampedTop = clamp(Math.round(rect.top), 0, Math.round(maxTop));
+    if (Math.abs(clampedLeft - rect.left) > 0.5 || Math.abs(clampedTop - rect.top) > 0.5) {
+      ui.wrapper.style.left = `${clampedLeft}px`;
+      ui.wrapper.style.right = "auto";
+      ui.wrapper.style.top = `${clampedTop}px`;
+      ui.wrapper.style.transform = "none";
+    }
+  }
   function unix() { return Math.floor(Date.now() / 1000); }
   function fmt(seconds) {
     const t = Math.max(0, Math.floor(seconds || 0));

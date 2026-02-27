@@ -47,6 +47,7 @@ function normalizeSettings(input) {
     showLifeBar: true,
     flashOnOkay: true,
     soundAlerts: false,
+    panelWidth: 320,
     panelOffsetTop: null,
     panelOffsetLeft: null
   };
@@ -61,6 +62,7 @@ function normalizeSettings(input) {
   s.showLifeBar = !!s.showLifeBar;
   s.flashOnOkay = !!s.flashOnOkay;
   s.soundAlerts = !!s.soundAlerts;
+  s.panelWidth = normalizeInt(s.panelWidth, 280, 560, defaults.panelWidth, 1);
   s.panelOffsetTop = Number.isFinite(Number(s.panelOffsetTop)) ? Number(s.panelOffsetTop) : null;
   s.panelOffsetLeft = Number.isFinite(Number(s.panelOffsetLeft)) ? Number(s.panelOffsetLeft) : null;
   return s;

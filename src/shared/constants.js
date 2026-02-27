@@ -16,6 +16,7 @@
       showLifeBar: true,
       soundAlerts: false,
       flashOnOkay: true,
+      panelWidth: 320,
       panelOffsetTop: null,
       panelOffsetLeft: null
     },

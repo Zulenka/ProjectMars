@@ -21,6 +21,7 @@ test("normalizeSettings clamps and sanitizes values", () => {
     defaultSort: "bad",
     showLastAction: 0,
     showLifeBar: "yes",
+    panelWidth: 999,
     panelOffsetTop: "12",
     panelOffsetLeft: "nan"
   });
@@ -30,6 +31,7 @@ test("normalizeSettings clamps and sanitizes values", () => {
   assert.equal(s.defaultSort, "all");
   assert.equal(s.showLastAction, false);
   assert.equal(s.showLifeBar, true);
+  assert.equal(s.panelWidth, 560);
   assert.equal(s.panelOffsetTop, 12);
   assert.equal(s.panelOffsetLeft, null);
 });
