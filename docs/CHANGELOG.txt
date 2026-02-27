@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 (Beta 1)
+
+- Added panel resize handle with persisted width.
+- Added panel size lock toggle (`🔓` / `🔒`) to prevent accidental resize while moving.
+- Improved drag bounds to use live panel dimensions after resize.
+- Added settings sanitization for panel width/lock state.
+
 ## 0.1.0
 
 - Initial MARS MVP

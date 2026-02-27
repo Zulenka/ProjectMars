@@ -18,6 +18,7 @@
     showLastAction: true,
     showLifeBar: true,
     panelWidth: 320,
+    panelSizeLocked: false,
     panelOffsetTop: null,
     panelOffsetLeft: null
   };
@@ -96,8 +97,10 @@
       b.addEventListener("click", fn);
       return b;
     };
+    const lockSizeBtn = mkBtn("🔓", "Lock size", () => setSizeLocked(!state.settings.panelSizeLocked));
     controls.append(
       mkBtn("⟳", "Refresh", () => chrome.runtime.sendMessage({ type: MSG.FORCE_REFRESH })),
+      lockSizeBtn,
       mkBtn("_", "Collapse", () => setCollapsed(true)),
       mkBtn("×", "Hide", () => setHidden(true))
     );
@@ -134,7 +137,7 @@
     panel.append(header, filters, body, footer, resizeHandle);
     wrapper.append(panel, fab);
     makeResizable(resizeHandle, wrapper);
-    return { wrapper, panel, fab, enemy, refresh, filters, filterButtons, empty, list, counts };
+    return { wrapper, panel, fab, enemy, refresh, filters, filterButtons, empty, list, counts, lockSizeBtn, resizeHandle };
   }
 
   function makeDraggable(handle, wrapper) {
@@ -175,6 +178,7 @@
 
   function makeResizable(handle, wrapper) {
     handle.addEventListener("mousedown", (ev) => {
+      if (state.settings.panelSizeLocked) return;
       if (ev.button !== 0) return;
       ev.preventDefault();
       ev.stopPropagation();
@@ -193,6 +197,7 @@
     });
     function onMove(ev) {
       if (!state.resize) return;
+      if (state.settings.panelSizeLocked) return;
       const desired = state.resize.width + (ev.clientX - state.resize.x);
       const maxByAnchor = window.innerWidth - VIEWPORT_MARGIN - state.resize.anchorOffset;
       const maxWidth = Math.min(PANEL_WIDTH_MAX, viewportWidthLimit(), Math.max(PANEL_WIDTH_MIN, Math.floor(maxByAnchor)));
@@ -217,6 +222,7 @@
       if (!resp?.ok) return;
       state.settings = { ...DEFAULTS, ...(resp.settings || {}) };
       state.settings.panelWidth = sanitizePanelWidth(state.settings.panelWidth);
+      state.settings.panelSizeLocked = Boolean(state.settings.panelSizeLocked);
       state.warData = resp.warData || null;
       state.session = resp.session || { panelHidden: false };
       state.sortMode = state.settings.defaultSort || "all";
@@ -255,11 +261,23 @@
     }
     setCollapsed(!state.collapsed);
   }
+  function setSizeLocked(locked) {
+    state.settings.panelSizeLocked = Boolean(locked);
+    persistSettings({ panelSizeLocked: state.settings.panelSizeLocked });
+    applyLayout();
+  }
 
   function applyLayout() {
     ui.wrapper.classList.toggle("is-collapsed", state.collapsed);
     ui.wrapper.classList.toggle("is-hidden", !!state.session.panelHidden);
     ui.wrapper.classList.toggle("is-left", state.settings.panelPosition === "left");
+    ui.wrapper.classList.toggle("is-size-locked", !!state.settings.panelSizeLocked);
+    ui.lockSizeBtn.textContent = state.settings.panelSizeLocked ? "🔒" : "🔓";
+    ui.lockSizeBtn.title = state.settings.panelSizeLocked ? "Unlock size" : "Lock size";
+    ui.lockSizeBtn.classList.toggle("is-active", !!state.settings.panelSizeLocked);
+    ui.lockSizeBtn.setAttribute("aria-label", ui.lockSizeBtn.title);
+    ui.resizeHandle.title = state.settings.panelSizeLocked ? "Size locked" : "Resize panel";
+    ui.resizeHandle.setAttribute("aria-label", state.settings.panelSizeLocked ? "Panel size locked" : "Resize panel");
     applyPanelWidth(panelWidthForLayout(state.settings.panelWidth));
     if (Number.isFinite(state.settings.panelOffsetTop)) {
       ui.wrapper.style.top = `${state.settings.panelOffsetTop}px`;

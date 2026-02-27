@@ -16,7 +16,7 @@
   const D = {
     pollIntervalSeconds: 30, maxVisibleTargets: 15, panelPosition: "right", defaultSort: "all",
     showLastAction: true, showLifeBar: true, flashOnOkay: true, soundAlerts: false,
-    panelWidth: 320
+    panelWidth: 320, panelSizeLocked: false
   };
   const q = (id) => document.getElementById(id);
   const apiKey = q("apiKey"), validateBtn = q("validateBtn"), apiStatus = q("apiStatus");
@@ -204,6 +204,7 @@
     s.flashOnOkay = !!s.flashOnOkay;
     s.soundAlerts = !!s.soundAlerts;
     s.panelWidth = clampInt(s.panelWidth, 280, 560, D.panelWidth, 1);
+    s.panelSizeLocked = !!s.panelSizeLocked;
     s.panelOffsetTop = Number.isFinite(Number(s.panelOffsetTop)) ? Number(s.panelOffsetTop) : null;
     s.panelOffsetLeft = Number.isFinite(Number(s.panelOffsetLeft)) ? Number(s.panelOffsetLeft) : null;
     return s;

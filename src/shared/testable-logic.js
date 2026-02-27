@@ -48,6 +48,7 @@ function normalizeSettings(input) {
     flashOnOkay: true,
     soundAlerts: false,
     panelWidth: 320,
+    panelSizeLocked: false,
     panelOffsetTop: null,
     panelOffsetLeft: null
   };
@@ -63,6 +64,7 @@ function normalizeSettings(input) {
   s.flashOnOkay = !!s.flashOnOkay;
   s.soundAlerts = !!s.soundAlerts;
   s.panelWidth = normalizeInt(s.panelWidth, 280, 560, defaults.panelWidth, 1);
+  s.panelSizeLocked = !!s.panelSizeLocked;
   s.panelOffsetTop = Number.isFinite(Number(s.panelOffsetTop)) ? Number(s.panelOffsetTop) : null;
   s.panelOffsetLeft = Number.isFinite(Number(s.panelOffsetLeft)) ? Number(s.panelOffsetLeft) : null;
   return s;

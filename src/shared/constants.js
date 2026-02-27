@@ -17,6 +17,7 @@
       soundAlerts: false,
       flashOnOkay: true,
       panelWidth: 320,
+      panelSizeLocked: false,
       panelOffsetTop: null,
       panelOffsetLeft: null
     },

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MARS War Tracker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Torn.com faction war target tracker overlay.",
   "icons": {
     "16": "src/assets/icons/icon-16.png",
@@ -9,8 +9,14 @@
     "48": "src/assets/icons/icon-48.png",
     "128": "src/assets/icons/icon-128.png"
   },
-  "permissions": ["storage", "alarms"],
-  "host_permissions": ["*://*.torn.com/*", "https://api.torn.com/*"],
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "*://*.torn.com/*",
+    "https://api.torn.com/*"
+  ],
   "background": {
     "service_worker": "src/background/background.js"
   },
@@ -25,15 +31,25 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.torn.com/*"],
-      "js": ["src/shared/compat.js", "src/content/content.js"],
+      "matches": [
+        "*://*.torn.com/*"
+      ],
+      "js": [
+        "src/shared/compat.js",
+        "src/content/content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/styles/mars-theme.css", "src/styles/panel.css"],
-      "matches": ["*://*.torn.com/*"]
+      "resources": [
+        "src/styles/mars-theme.css",
+        "src/styles/panel.css"
+      ],
+      "matches": [
+        "*://*.torn.com/*"
+      ]
     }
   ],
   "content_security_policy": {
